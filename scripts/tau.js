@@ -43,6 +43,7 @@ The timer should transition between people every 10 seconds.
 */
 
 var classmatesArray = [];
+var personIndex = 0;
 
 $(document).ready(function(){
 // pulling in the JSON file and adding it to an array
@@ -55,57 +56,56 @@ $(document).ready(function(){
         for (var i = 0; i < data.tau.length; i++) {
          classmatesArray.push( data.tau[i] );
          displayClassmates(classmatesArray);
-         studentButtons();
+
        }// end for loop
+       createPeopleButtons();
       } // end success
     }); // end ajax
   }; // end classmates
   classmates();
 
-var i = 0;
+
 var outputText = '';
 
 var displayClassmates = function(student, index) {
-       outputText = '<p>' + '<strong>' + "Name:" + '</strong>' + ' ' + classmatesArray[i].first_name + ' ' + classmatesArray[i].last_name + '</p>' +
-       '<img class="portrait" src="' + classmatesArray[i].picUrl + '" />' + '<p>' + '<strong>' + "About" + ' ' + classmatesArray[i].first_name + ":" + '' +
-        '</strong>' + ' ' + classmatesArray[i].info + '</p>' + '<p>' + 'Displaying Student:' + ' ' + (classmatesArray.indexOf(classmatesArray[i]) + 1) + ' ' + 'out of' + ' ' + classmatesArray.length;
+        outputText = '<p>' + '<strong>' + "Name:" + '</strong>' + ' ' + classmatesArray[personIndex].first_name + ' ' + classmatesArray[personIndex].last_name + '</p>' +
+       '<img class="portrait" src="' + classmatesArray[personIndex].picUrl + '" />' + '<p>' + '<strong>' + "About" + ' ' + classmatesArray[personIndex].first_name + ":" + '' +
+        '</strong>' + ' ' + classmatesArray[personIndex].info + '</p>' + '<p>' + 'Displaying Student:' + ' ' + (classmatesArray.indexOf(classmatesArray[personIndex]) + 1) + ' ' + 'out of' + ' ' + classmatesArray.length;
        $('#classmates').html(outputText);
-   }; //end displayStudents function
+}; //end displayStudents function
 
-   $('#nextButton').on('click', function() {
-    i = i + 1;
-    i = i % classmatesArray.length; // if we've gone too high, start from `0` again
+// next button function
+$('#nextButton').on('click', function() {
+    personIndex = personIndex + 1;
+    personIndex = personIndex % classmatesArray.length; // if we've gone too high, start from `0` again
     //display to the dom
-    outputText = '<p>' + '<strong>' + "Name:" + '</strong>' + ' ' + classmatesArray[i].first_name + ' ' + classmatesArray[i].last_name + '</p>' +
-    '<img class="portrait" src="' + classmatesArray[i].picUrl + '" />' + '<p>' + '<strong>' + "About" + ' ' + classmatesArray[i].first_name + ":" + '' +
-     '</strong>' + ' ' + classmatesArray[i].info + '</p>' + '<p>' + 'Displaying Student:' + ' ' + (classmatesArray.indexOf(classmatesArray[i]) + 1) + ' ' + 'out of' + ' ' + classmatesArray.length;
-    $('#classmates').html(outputText);
-    console.log(classmatesArray[i]);
+    displayClassmates ();
 }); //end next button on click function
 
 //previous button function
 $('#prevButton').on('click', function() {
-    if (i === 0) { // i would become 0
-        i = classmatesArray.length;
+    if (personIndex === 0) { // i would become 0
+        personIndex = classmatesArray.length;
     }
-    i = i - 1; // decrease by one
-    //show student name and info on DOM
-    outputText = '<p>' + '<strong>' + "Name:" + '</strong>' + ' ' + classmatesArray[i].first_name + ' ' + classmatesArray[i].last_name + '</p>' +
-    '<img class="portrait" src="' + classmatesArray[i].picUrl + '" />' + '<p>' + '<strong>' + "About" + ' ' + classmatesArray[i].first_name + ":" + '' +
-     '</strong>' + ' ' + classmatesArray[i].info + '</p>' + '<p>' + 'Displaying Student:' + ' ' + (classmatesArray.indexOf(classmatesArray[i]) + 1) + ' ' + 'out of' + ' ' + classmatesArray.length;
-    $('#classmates').html(outputText);
-    console.log(classmatesArray[i]);
+    personIndex = personIndex - 1; // decrease by one
+    // display to the DOM
+    displayClassmates ();
 }); //end prev button function
 
-// working on trying to get button for each individual.
-var button = "";
-var studentButtons = function() {
-  for (var i = 0; i < classmatesArray.length; i++) {
-    button = '<button>'  + classmatesArray[i].first_name + '</button>';
-    console.log(button);
-    $('#classmateButtons').html(button);
-  }// end for loop
-};//end studentButtons
+function createPeopleButtons(){
+  //Loop through the array of people,
+  for(var i = 0; i < classmatesArray.length; i++){
+    $("#classmateButtons").append("<button class='person' data-index='" + i + "'></button>");
+    var el = $("#classmateButtons").children().last();
+    el.text(classmatesArray[i].first_name);
+  }
+}
 
+function clickSpecific(){
+ personIndex = $(this).data("index");
+ displayClassmates();
+}
+
+$("#classmateButtons").on("click", ".person", clickSpecific);
 
 });// end document ready
