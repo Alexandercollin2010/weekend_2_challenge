@@ -95,7 +95,7 @@ $('#prevButton').on('click', function() {
 function createPeopleButtons(){
   //Loop through the array of people,
   for(var i = 0; i < classmatesArray.length; i++){
-    $("#classmateButtons").append("<button class='person' data-index='" + i + "'></button>");
+    $("#classmateButtons").append("<button id='person' class= btn btn-warning data-index='" + i + "'></button>");
     var el = $("#classmateButtons").children().last();
     el.text(classmatesArray[i].first_name);
   }
@@ -106,6 +106,6 @@ function clickSpecific(){
  displayClassmates();
 }
 
-$("#classmateButtons").on("click", ".person", clickSpecific);
+$("#classmateButtons").on("click", "#person", clickSpecific);
 
 });// end document ready

@@ -1,3 +1,15 @@
-body {
-  background-color: aqua;
+#page {
+  background-color: purple;
+}
+
+p {
+  color: yellow;
+}
+
+#classmates {
+  text-align: center;
+}
+
+#classmateButtons {
+  text-align: center;
 }
